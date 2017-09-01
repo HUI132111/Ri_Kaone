@@ -1,1 +1,1 @@
-include ':app', ':xlistview', ':SlidingMenu-master'
+include ':app', ':xlistview', ':slidingmenu'
