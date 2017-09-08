@@ -17,8 +17,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
 
+        }
+
+    }
+}
+repositories {
+    flatDir {
+        dirs 'libs' //就是你放aar的目录地址
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -26,9 +45,14 @@ dependencies {
     })
     compile project(':xlistview')
     compile project(':slidingmenu')
+    compile name: 'SMSSDK-3.0.0', ext: 'aar'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'org.xutils:xutils:3.5.0'
+    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    compile 'com.github.andyoom:draggrid:v1.0.1'
+    compile 'com.github.andyoom:citypicker:v1.0.4'
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     testCompile 'junit:junit:4.12'
 }

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#f9a9aa</color>
+    <color name="colorPrimaryDark">#ff0000</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="huiheng">#e3e3e3</color>
+    <color name="huiview">#f4f5f6</color>
+    <color name="huitou">#505050</color>
+    <color name="zitou">#4b4b4b</color>
+    <color name="jiantou">#e7e7e7</color>
+    <color name="zixiao">#7f7f7f</color>
 </resources>

@@ -9,4 +9,5 @@ public class Mybean {
     public String author_name;
     public String date;
     public String pics;
+    public String url;
 }

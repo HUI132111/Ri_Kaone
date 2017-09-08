@@ -1,6 +1,8 @@
 package com.bwie.aizhonghui.ri_kaone.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,15 +10,21 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.andy.library.ChannelActivity;
+import com.andy.library.ChannelBean;
 import com.bwie.aizhonghui.ri_kaone.Bean.CategoryBean;
+import com.bwie.aizhonghui.ri_kaone.MainActivity;
 import com.bwie.aizhonghui.ri_kaone.R;
 
 import java.util.ArrayList;
@@ -64,6 +72,8 @@ public class HorizontalScollTabhost extends LinearLayout implements ViewPager.On
         viewpager=view.findViewById(R.id.viewpager_fragment);
         viewpager.addOnPageChangeListener(this);
         mMenuLayout=view.findViewById(R.id.layout_menu);
+
+
     }
     public void ccc(List<CategoryBean> list,List<Fragment> fragments){
         this.list=list;
@@ -80,11 +90,13 @@ public class HorizontalScollTabhost extends LinearLayout implements ViewPager.On
     }
     //绘制viewpager
     private void drawViewpager() {
+        viewpager.removeAllViews();
         myPager=new MyPager(((FragmentActivity)mContext).getSupportFragmentManager());
         viewpager.setAdapter(myPager);
     }
     //绘制横向滑动菜单
     private void drawHorizontal() {
+        mMenuLayout.removeAllViews();
         mMenuLayout.setBackgroundColor(mBgColor);
         for (int i = 0; i <count; i++) {
             CategoryBean bean=(CategoryBean) list.get(i);

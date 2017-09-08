@@ -1,17 +1,24 @@
 package com.bwie.aizhonghui.ri_kaone.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.bwie.aizhonghui.ri_kaone.Adapter.MyAdapter;
+import com.bwie.aizhonghui.ri_kaone.Bean.LxSj;
 import com.bwie.aizhonghui.ri_kaone.Bean.Mybean;
 import com.bwie.aizhonghui.ri_kaone.MainActivity;
+import com.bwie.aizhonghui.ri_kaone.MySqlite.SqliteUtils;
 import com.bwie.aizhonghui.ri_kaone.R;
+import com.bwie.aizhonghui.ri_kaone.XqActivity;
+import com.bwie.aizhonghui.ri_kaone.utils.NetWorkInfoUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,8 +35,10 @@ import view.xlistview.XListView;
  * Created by DANGEROUS_HUI on 2017/8/31.
  */
 
-public class Fragmenttop extends Fragment implements XListView.IXListViewListener {
-    private List<Mybean> mblist=new ArrayList<>();
+
+public class Fragmenttop extends Fragment implements XListView.IXListViewListener, AdapterView.OnItemClickListener {
+    private SqliteUtils dao;
+    private List<Mybean> mblist;
     private List<Mybean> newlist;
     private int nofify=0;
     private MyAdapter ma;
@@ -37,22 +46,53 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
     private XListView lvv;
     private String url="http://v.juhe.cn/toutiao/index";
     private String key="22a108244dbb8d1f49967cd74a0c144d";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView=View.inflate(getActivity(), R.layout.fragment_layout,null);
+        dao=new SqliteUtils(getActivity());
         lvv=mRootView.findViewById(R.id.lv_xlv);
         lvv.setXListViewListener(this);
         lvv.setPullLoadEnable(true);
         lvv.setPullRefreshEnable(true);
-        initpost();
+        loadNewData();
         return mRootView;
     }
+    private void loadNewData() {
+        new NetWorkInfoUtils().vertify(getActivity(), new NetWorkInfoUtils.NetWork() {
+            @Override
+            public void netWifiVisible() {
+                initpost();
+            }
+
+            @Override
+            public void netUnVisible() {
+                Toast.makeText(getActivity(),"头条无网",Toast.LENGTH_SHORT).show();
+                List<LxSj> select = dao.select();
+                for (LxSj lxSj : select) {
+                    if(lxSj.lxtype.equals("top")){
+                        JSONjie(lxSj.lxcontent);
+                    }else{
+                        System.out.println("___没有此数据___");
+                    }
+                }
+            }
+
+            @Override
+            public void netMobileVisible() {
+
+                initpost();
+            }
+        });
+    }
+
     private void initpost() {
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
@@ -82,6 +122,7 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
     }
     private void JSONjie(String result) {
         try {
+            mblist=new ArrayList<>();
             JSONObject obj = new JSONObject(result);
             JSONObject result1 = obj.getJSONObject("result");
             JSONArray data = result1.getJSONArray("data");
@@ -93,6 +134,7 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
                     mb.author_name=js.optString("author_name");
                     mb.date=js.optString("date");
                     mb.pics=js.optString("thumbnail_pic_s");
+                    mb.url=js.optString("url");
                     mblist.add(mb);
                 }
             }if(mblist!=null){
@@ -111,6 +153,7 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
         nofify+=10;
         ma=new MyAdapter(getActivity(),newlist);
         lvv.setAdapter(ma);
+        lvv.setOnItemClickListener(this);
         lvv.stopRefresh();
     }
 
@@ -122,7 +165,29 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
 
     @Override
     public void onLoadMore() {
-        Toast.makeText(getActivity(),"已没有更多",Toast.LENGTH_SHORT).show();
+        if(nofify+10<mblist.size()){
+            for (int i =nofify; i <nofify+10; i++) {
+                newlist.add(mblist.get(i));
+            }
+            nofify+=10;
+        }else{
+            if(nofify<mblist.size()){
+                for (int i =nofify; i <mblist.size(); i++) {
+                    newlist.add(mblist.get(i));
+                }
+                int nk=mblist.size()-nofify;
+                nofify+=nk;
+            }else{
+                Toast.makeText(getActivity(),"已没有更多",Toast.LENGTH_SHORT).show();
+            }
+        }
         lvv.stopLoadMore();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent in=new Intent(getContext(), XqActivity.class);
+        in.putExtra("murl",mblist.get(i-1).url);
+        getActivity().startActivity(in);
     }
 }
