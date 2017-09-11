@@ -100,6 +100,7 @@ public class Fragmentguoji extends Fragment implements XListView.IXListViewListe
     }
 
     private void initpost() {
+        nofify=0;
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
         params.addBodyParameter("type","guoji");

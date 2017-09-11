@@ -34,7 +34,7 @@ import view.xlistview.XListView;
  */
 
 public class Fragmentyule extends Fragment implements XListView.IXListViewListener, AdapterView.OnItemClickListener {
-    private List<Mybean> mblist=new ArrayList<>();
+    private List<Mybean> mblist ;
     private List<Mybean> newlist;
     private SqliteUtils dao;
     private int nofify=0;
@@ -90,6 +90,7 @@ public class Fragmentyule extends Fragment implements XListView.IXListViewListen
     }
 
     private void initpost() {
+        nofify=0;
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
         params.addBodyParameter("type","yule");
@@ -118,6 +119,7 @@ public class Fragmentyule extends Fragment implements XListView.IXListViewListen
     }
     private void JSONjie(String result) {
         try {
+            mblist=new ArrayList<>();
             JSONObject obj = new JSONObject(result);
             JSONObject result1 = obj.getJSONObject("result");
             JSONArray data = result1.getJSONArray("data");
@@ -141,8 +143,10 @@ public class Fragmentyule extends Fragment implements XListView.IXListViewListen
     }
 
     private void setDate() {
+        System.out.println("====总list的====="+mblist.size());
         newlist=new ArrayList<>();
         for (int i = 0; i <nofify+10; i++) {
+
             newlist.add(mblist.get(i));
         }
         nofify+=10;

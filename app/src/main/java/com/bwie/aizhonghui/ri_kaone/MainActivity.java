@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendBroadcast(new Intent("kson.test"));
         x.view().inject(this);
         initSliding();
+        initView();
 
 
 
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         System.out.println("走了OnResume方法");
-        initView();
         initData();
     }
 

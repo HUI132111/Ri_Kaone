@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ import java.util.List;
 
 public class HorizontalScollTabhost extends LinearLayout implements ViewPager.OnPageChangeListener {
     private Context mContext;
+    private String mhc="NO";
     private int mBgColor;
     private List<CategoryBean> list;
     private List<Fragment> fragmentList;
@@ -90,9 +92,16 @@ public class HorizontalScollTabhost extends LinearLayout implements ViewPager.On
     }
     //绘制viewpager
     private void drawViewpager() {
-        viewpager.removeAllViews();
-        myPager=new MyPager(((FragmentActivity)mContext).getSupportFragmentManager());
-        viewpager.setAdapter(myPager);
+        if(myPager==null){
+            myPager=new MyPager(((FragmentActivity)mContext).getSupportFragmentManager());
+            viewpager.setAdapter(myPager);
+        }else{
+            mhc="YES";
+            myPager.notifyDataSetChanged();
+            topViews.get(0).setSelected(false);
+            topViews.get(viewpager.getCurrentItem()).setSelected(true);
+        }
+
     }
     //绘制横向滑动菜单
     private void drawHorizontal() {
@@ -113,8 +122,11 @@ public class HorizontalScollTabhost extends LinearLayout implements ViewPager.On
             });
             mMenuLayout.addView(tv);
             topViews.add(tv);
+
+            topViews.get(0).setSelected(true);
+
         }
-        topViews.get(0).setSelected(true);
+
     }
     private void moveItemToCenter(TextView tv) {
         DisplayMetrics dm=getResources().getDisplayMetrics();
@@ -162,6 +174,11 @@ public class HorizontalScollTabhost extends LinearLayout implements ViewPager.On
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+//            super.destroyItem(container, position, object);
         }
     }
 }

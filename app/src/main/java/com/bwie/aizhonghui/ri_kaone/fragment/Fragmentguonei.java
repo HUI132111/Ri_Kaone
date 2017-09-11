@@ -99,6 +99,7 @@ public class Fragmentguonei extends Fragment implements XListView.IXListViewList
     }
 
     private void initpost() {
+        nofify=0;
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
         params.addBodyParameter("type","guonei");

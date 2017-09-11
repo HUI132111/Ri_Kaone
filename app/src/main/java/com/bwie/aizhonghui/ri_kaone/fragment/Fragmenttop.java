@@ -94,6 +94,7 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
     }
 
     private void initpost() {
+        nofify=0;
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
         params.addBodyParameter("type","top");
@@ -146,9 +147,12 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
     }
 
     private void setDate() {
+        System.out.println("====总list的====="+mblist.size());
         newlist=new ArrayList<>();
+        System.out.println("====list的====="+newlist.size());
         for (int i = 0; i <nofify+10; i++) {
          newlist.add(mblist.get(i));
+            System.out.println("====更新list的====="+newlist.size());
         }
         nofify+=10;
         ma=new MyAdapter(getActivity(),newlist);
@@ -189,5 +193,12 @@ public class Fragmenttop extends Fragment implements XListView.IXListViewListene
         Intent in=new Intent(getContext(), XqActivity.class);
         in.putExtra("murl",mblist.get(i-1).url);
         getActivity().startActivity(in);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mblist.clear();
+        newlist.clear();
     }
 }

@@ -89,6 +89,7 @@ public class Fragmentcaijing extends Fragment implements XListView.IXListViewLis
     }
 
     private void initpost() {
+        nofify=0;
         RequestParams params=new RequestParams(url);
         params.addBodyParameter("key",key);
         params.addBodyParameter("type","caijing");
